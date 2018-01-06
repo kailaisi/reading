@@ -30,7 +30,7 @@ def down(url):
             f.write(b)
     except BaseException as e:
         with open("error.txt",'a+') as f:
-            f.write(repr(e))
+            f.write(url)
         pass
 
 
@@ -53,7 +53,7 @@ class ReadingspiderSpider(scrapy.Spider):
                 pass
             os.chdir(item['list_name'].text)  # 切换到排行榜名称文件夹.find("ul",class_="BOX_Top1")
             # print(info.find("div",class_='TYPE').find("ul",class_="BOX Top1").findAll("li"))
-            for li in info.find("div",class_='TYPE').find("ul",class_="BOX Top1").findAll("li"):
+            for li in info.find("div",class_='TYPE').find("ul",class_="BOX Top1").findAll("li",limit=10):
                 item['name']=li.find("a").text
                 item['link']=li.find("a")['href'].replace("book","list")
                 print(item['name'])
