@@ -28,7 +28,9 @@ def down(url):
         with open(filename, "a+") as f:
             b = ''.join(words)
             f.write(b)
-    except AttributeError:
+    except BaseException as e:
+        with open("error.txt",'a+') as f:
+            f.write(repr(e))
         pass
 
 
@@ -41,7 +43,7 @@ class ReadingspiderSpider(scrapy.Spider):
         items = []
         roots = BeautifulSoup(response.body, "lxml")
         # lists = roots.findAll("div",attrs={'style': r'display: block;'})  # attrs={"class": "TABBOX","style":"display: block;"})
-        lists=roots.findAll("div",class_="TABBOX",limit=1)
+        lists=roots.findAll("div",class_="TABBOX")
         for info in lists:
             item = ReadingSpiderItem()
             item['list_name'] = info.find("h2", class_='tit')
