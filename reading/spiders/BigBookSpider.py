@@ -70,12 +70,18 @@ class ReadingspiderSpider(scrapy.Spider):
                 response = request.urlopen(req)
                 html = response.read().decode("utf-8")
                 bslist = BeautifulSoup(html, "lxml")
-                urllist = bslist.find("div", class_="Main List").findAll("dl")[1].find("dd")
-                print(urllist)
-                for link in urllist.findAll("a"):
-                    if 'href' in link.attrs:
-                        endurl = "http://www.17k.com" + link.attrs['href']
-                        down(endurl)
+                urllist = bslist.find("div", class_="Main List").findAll("dd") #章节列表
+                for chapters in  urllist:
+                    print(urllist)
+                    for link in chapters.findAll("a"):
+                        if link.find("span", class_='ellipsis vip') != None:
+                            break
+                        if 'href' in link.attrs:
+                            endurl = "http://www.17k.com" + link.attrs['href']
+                            down(endurl)
+                    else:
+                        continue
+                    break
                 path_now = os.getcwd()  # 返回当前工作目录
                 path_last = os.path.dirname(path_now)  # 获取文件路径中所在的目录
                 os.chdir(path_last)  # 切换到书名上一级->排行榜目录
